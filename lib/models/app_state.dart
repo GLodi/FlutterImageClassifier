@@ -1,18 +1,18 @@
-import 'package:meta/meta.dart';
-import 'package:flutter_image_classifier/models/models.dart';
-
-@immutable
 class AppState {
+  final int count;
   final bool isLoading;
-  final List<Todo> todos;
-  final AppTab activeTab;
-  final VisibilityFilter activeFilter;
 
-  AppState(
-      {this.isLoading = false,
-      this.todos = const [],
-      this.activeTab = AppTab.todos,
-      this.activeFilter = VisibilityFilter.all});
+  AppState({this.count = 0, this.isLoading = false});
 
-  factory AppState.loading() => AppState(isLoading: true);
+	AppState copyWith({int count, bool isLoading}) {
+		return new AppState(
+			count: count ?? this.count,
+			isLoading: isLoading ?? this.isLoading
+		);
+	}
+
+	@override
+	String toString() {
+		return 'AppState{isLoading: $isLoading, count: $count}';
+	}
 }
