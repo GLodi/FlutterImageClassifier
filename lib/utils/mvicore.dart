@@ -2,27 +2,60 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class MviView {
-  Future closeSubscriptions();
+abstract class MviDisposable {
+  Future unsubscribe();
 }
 
-class MviPresenter<ViewModel> extends Stream<ViewModel> implements MviView {
+abstract class MviView implements MviDisposable {}
+
+class MviPresenter<ViewModel> extends Stream<ViewModel> implements MviDisposable {
   final BehaviorSubject<ViewModel> _subject;
+  final List<StreamSubscription<dynamic>> subscriptions = [];
   
-  MviPresenter({@required Stream<ViewModel> stream, ViewModel initialModel}) : _subject = _createSubject<ViewModel>(stream, initialModel);
+  MviPresenter({
+    @required Stream<ViewModel> stream,
+    ViewModel initialModel
+  }) : _subject = _createSubject<ViewModel>(stream, initialModel);
 
-  static _createSubject<ViewState>( Stream<ViewState> model, ViewState initialState) {
+  ViewModel get latest => _subject.value;
 
+  void setup() {}
+
+  static _createSubject<ViewState>(Stream<ViewState> model, ViewState initialState) {
+    StreamSubscription<ViewState> subscription;
+    BehaviorSubject<ViewState> _subject;
+
+    _subject = BehaviorSubject<ViewState>(
+      seedValue: initialState,
+      onListen: () {
+        subscription = model.listen(
+          _subject.add,
+          onError: _subject.addError,
+          onDone: _subject.close
+        );
+      },
+      onCancel: () => subscription.cancel(),
+      sync: true
+    );
+
+    return _subject;
   }
 
   @override
-  Future closeSubscriptions() {
-    // TODO: implement closeSubscriptions
-  }
+  StreamSubscription<ViewModel> listen(
+    void Function(ViewModel event) onData, 
+    {Function onError, void Function() onDone, bool cancelOnError}
+  ) =>
+    _subject.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError
+    );
+  
 
-  @override
-  StreamSubscription<ViewModel> listen(void Function(ViewModel event) onData, {Function onError, void Function() onDone, bool cancelOnError}) {
-    // TODO: implement listen
-  }
+  @mustCallSuper
+  Future unsubscribe() => 
+    Future.wait([_subject.close()]..addAll(subscriptions.map((s) => s.cancel())));
   
 } 
