@@ -12,7 +12,7 @@ import 'package:flutter_image_classifier/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(new MainApp());
+    await tester.pumpWidget(new Home());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
