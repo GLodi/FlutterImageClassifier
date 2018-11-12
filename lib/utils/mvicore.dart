@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_image_classifier/repositories/injector.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -11,6 +13,7 @@ abstract class MviView implements MviDisposable {}
 class MviPresenter<ViewModel> extends Stream<ViewModel> implements MviDisposable {
   final BehaviorSubject<ViewModel> _subject;
   final List<StreamSubscription<dynamic>> subscriptions = [];
+  Injector injector;
   
   MviPresenter({
     @required Stream<ViewModel> stream,
@@ -19,7 +22,7 @@ class MviPresenter<ViewModel> extends Stream<ViewModel> implements MviDisposable
 
   ViewModel get latest => _subject.value;
 
-  void setup() {}
+  void setup() { if(injector != null) injector = Injector(); }
 
   static _createSubject<ViewState>(Stream<ViewState> model, ViewState initialState) {
     StreamSubscription<ViewState> subscription;
