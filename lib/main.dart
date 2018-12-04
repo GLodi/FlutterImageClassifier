@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+import 'ui/home_screen.dart';
 import 'ui/camera_screen.dart';
 
-void main(){
+
+void main() async {
+  cameras = await availableCameras();
   runApp(App());
 }
 
@@ -12,7 +16,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
-        body: CameraScreen(),
+        body: HomeScreen(),
       ),
     );
   }

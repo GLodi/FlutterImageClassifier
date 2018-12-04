@@ -1,51 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_image_classifier/blocs/camera_bloc.dart';
+import 'package:camera/camera.dart';
 
-class CameraScreen extends StatefulWidget {
+List<CameraDescription> cameras;
+
+class CameraApp extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return _CameraScreenState();
-  }
+  _CameraAppState createState() => _CameraAppState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
+class _CameraAppState extends State<CameraApp> {
+  CameraController controller;
 
   @override
   void initState() {
-    bloc.fetchWeatherPrediction();
     super.initState();
+    controller = CameraController(cameras[0], ResolutionPreset.medium);
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    bloc.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Weather"),
-      ),
-      body: StreamBuilder(
-        stream: bloc.weatherPrediction,
-        builder: (context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.hasData) {
-            return Center(child: Text(snapshot.toString()));
-          }
-          else if (snapshot.hasError) {
-            return Center(child: Text("error"));
-          }
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () { bloc.fetchWeatherPrediction(); },
-        tooltip: "Refresh",
-        child: new Icon(Icons.refresh),
-      ),
-    );
+    if (!controller.value.isInitialized) {
+      return Container();
+    }
+    return AspectRatio(
+        aspectRatio:
+        controller.value.aspectRatio,
+        child: CameraPreview(controller));
   }
-
 }
