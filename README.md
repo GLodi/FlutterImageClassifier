@@ -1,6 +1,6 @@
 # flutter_image_classifier
 
-A new Flutter project.
+A simple BLoC pattern image uploader. 
 
 ## Getting Started
 

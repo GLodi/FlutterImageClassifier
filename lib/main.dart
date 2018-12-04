@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_image_classifier/repositories/injector.dart';
+import 'ui/camera_screen.dart';
 
-void main() {
-  Injector.configure(RepoType.MOCK);
-  runApp(new Home());
+void main(){
+  runApp(App());
 }
 
-class Home extends StatelessWidget {
+class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return MaterialApp(
-      title: 'Welcome to Flutter',
+      theme: ThemeData.dark(),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Welcome to Flutter'),
-        ),
-        body: Center(
-          child: Text('Hello World'),
-        ),
+        body: CameraScreen(),
       ),
     );
   }
