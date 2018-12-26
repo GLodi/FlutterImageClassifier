@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'ui/home_screen.dart';
-import 'ui/camera_screen.dart';
-
+import 'package:flutter_image_classifier/presentation/home_screen.dart';
+import 'package:flutter_image_classifier/presentation/camera_screen.dart';
 
 void main() async {
   cameras = await availableCameras();

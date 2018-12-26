@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_image_classifier/blocs/camera_bloc.dart';
-import 'package:flutter_image_classifier/ui/camera_screen.dart';
+import 'package:flutter_image_classifier/domain/blocs/camera_bloc.dart';
+import 'package:flutter_image_classifier/presentation/camera_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
