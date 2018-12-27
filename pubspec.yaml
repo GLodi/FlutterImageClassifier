@@ -13,11 +13,12 @@ environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
+  flutter_simple_dependency_injection: ^1.0.0
   path_provider: ^0.4.1
   video_player: ^0.7.2
   camera: ^0.2.6
   rxdart: ^0.19.0
-  http: ^0.12.0
+  dio: ^1.0.13
   flutter:
     sdk: flutter
 

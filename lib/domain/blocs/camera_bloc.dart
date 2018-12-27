@@ -1,20 +1,37 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:flutter_image_classifier/data/data.dart';
+import 'dart:async';
 
-class CameraBloc {
-  final _weatherPrediction = PublishSubject<String>();
+import 'package:flutter_image_classifier/domain/blocs/bloc_provider.dart';
+import 'package:flutter_image_classifier/domain/managers/camera_manager.dart';
 
-  Observable<String> get weatherPrediction => _weatherPrediction.stream;
+class CameraBloc extends BlocBase {
+  CameraManager _cameraManager;
 
-  fetchWeatherPrediction() async {
-    final prediction = await _repository.fetchWeatherPrediction();
-    _weatherPrediction.sink.add(prediction);
+  // out
+  final _availabilitySubject = BehaviorSubject<String>();
+  Stream<String> get availability => _availabilitySubject.stream;
+
+  // in
+  final _fetchAvailabilitySubject = PublishSubject<int>();
+  Sink<int> get fetchAvailability => _fetchAvailabilitySubject.sink;
+
+  CameraBloc(this._cameraManager) {
+    _fetchAvailabilitySubject.listen((_) => _fetchAvailability());
+
+    fetchAvailability.add(0);
   }
 
-  dispose() {
-    _weatherPrediction.close();
+  void _fetchAvailability() {
+    _availabilitySubject.add(null);
+    _cameraManager.getAvailability()
+        .map((string) { _availabilitySubject.add(string); })
+        .listen((_) => {});
+  }
+
+  @override
+  void dispose() {
+    _availabilitySubject.close();
+    _fetchAvailabilitySubject.close();
   }
 
 }
-
-final bloc = CameraBloc();

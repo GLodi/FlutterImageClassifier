@@ -1,43 +1,27 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_image_classifier/domain/blocs/camera_bloc.dart';
+import 'package:flutter_image_classifier/domain/blocs/bloc_provider.dart';
 import 'package:flutter_image_classifier/presentation/camera_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _HomeScreenState();
-  }
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-
-  @override
-  void initState() {
-    bloc.fetchWeatherPrediction();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
-
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    CameraBloc bloc = BlocProvider.of<CameraBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Weather"),
       ),
-      body: StreamBuilder(
-        stream: bloc.weatherPrediction,
-        builder: (context, AsyncSnapshot<String> snapshot) {
+      body: StreamBuilder<String>(
+        stream: bloc.availability,
+        builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(snapshot.toString()),
+                  Text(snapshot.data.toString()),
                   RaisedButton(
                     child: Text("Open Camera"),
                     onPressed:() {
@@ -58,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { bloc.fetchWeatherPrediction(); },
+        onPressed: () { bloc.fetchAvailability.add(0); },
         tooltip: "Refresh",
         child: new Icon(Icons.refresh),
       ),
