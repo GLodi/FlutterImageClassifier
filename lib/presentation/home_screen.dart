@@ -10,9 +10,6 @@ class HomeScreen extends StatelessWidget {
     CameraBloc bloc = BlocProvider.of<CameraBloc>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Weather"),
-      ),
       body: StreamBuilder<String>(
         stream: bloc.availability,
         builder: (context, snapshot) {
@@ -34,9 +31,6 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             );
-          }
-          else if (snapshot.hasError) {
-            return Center(child: Text("error"));
           }
           return Center(child: CircularProgressIndicator());
         },

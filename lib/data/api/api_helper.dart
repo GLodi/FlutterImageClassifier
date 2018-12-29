@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_image_classifier/data/api/net_utils.dart';
 
 class ApiHelper {
-  final url ='https://ineedaprompt.com/dictionary/default/prompt?q=adj+noun+adv+verb+noun+location';
+  final url ='http://192.168.1.9:5000';
   final NetUtils _net;
 
   ApiHelper(this._net);
@@ -13,17 +13,23 @@ class ApiHelper {
   Future<String> fetchAvailability() async {
     return _net.get(url)
         .then((response) => response.toString())
-        .catchError((onError) => 'Error checking availability');
+        .catchError((onError) {
+          print(onError);
+          return 'Error checking availability';
+        });
   }
 
   Future<String> uploadImage(String path) async {
     FormData form = new FormData.from({
-      'image' : new UploadFileInfo(new File(path),
+      'file' : new UploadFileInfo(new File(path),
           path.substring(path.lastIndexOf('/'), path.length))
     });
-    return _net.post(url + '/upload', form)
+    return _net.post(url + '/predict', form)
         .then((response) => response.toString())
-        .catchError((onError) => 'Error uploading image');
+        .catchError((onError) {
+          print(onError);
+          return 'Error uploading image';
+        });
   }
 
 }

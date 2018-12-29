@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:camera/camera.dart';
 
 import 'package:flutter_image_classifier/data/data.dart';
 import 'package:flutter_image_classifier/domain/domain.dart';
 import 'package:flutter_image_classifier/presentation/home_screen.dart';
+import 'package:flutter_image_classifier/presentation/camera_screen.dart';
 
-void main() {
+void main() async {
+  cameras = await availableCameras();
   final injector = Injector.getInjector();
   injector.map<NetUtils>((i) =>
     new NetUtils(), isSingleton: true);
@@ -25,7 +28,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: BlocProvider(child: HomeScreen(), bloc: Injector.getInjector().get<CameraBloc>()),
       ),
