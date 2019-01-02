@@ -37,12 +37,12 @@ class _CameraAppState extends State<CameraApp> {
     return new Scaffold(
       appBar: new AppBar(title: new Text('Capture')),
       body: new Transform.scale(
-          scale: 1 / controller.value.aspectRatio,
-          child: new Center(
-            child: new AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: new CameraPreview(controller)),
-          )),
+        scale: 1 / controller.value.aspectRatio,
+        child: new Center(
+          child: new AspectRatio(
+            aspectRatio: controller.value.aspectRatio,
+            child: new CameraPreview(controller)),
+        )),
     );
   }
 }

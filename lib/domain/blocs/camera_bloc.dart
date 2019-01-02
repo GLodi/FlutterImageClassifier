@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 
-import 'package:flutter_image_classifier/domain/blocs/bloc_provider.dart';
+import 'package:flutter_image_classifier/domain/bloc_utils/bloc_utils.dart';
 import 'package:flutter_image_classifier/domain/managers/camera_manager.dart';
 
 class CameraBloc extends BlocBase {

@@ -30,7 +30,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: BlocProvider(child: HomeScreen(), bloc: Injector.getInjector().get<CameraBloc>()),
+        body: BlocProvider(
+          child: HomeScreen(),
+          bloc: Injector.getInjector().get<CameraBloc>()
+        ),
       ),
     );
   }

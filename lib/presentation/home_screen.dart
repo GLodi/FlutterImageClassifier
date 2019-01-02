@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_image_classifier/domain/blocs/camera_bloc.dart';
-import 'package:flutter_image_classifier/domain/blocs/bloc_provider.dart';
+import 'package:flutter_image_classifier/domain/bloc_utils/bloc_provider.dart';
 import 'package:flutter_image_classifier/presentation/camera_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>{
+  CameraBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = BlocProvider.of<CameraBloc>(context);
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    CameraBloc bloc = BlocProvider.of<CameraBloc>(context);
-
     return Scaffold(
       body: StreamBuilder<String>(
         stream: bloc.availability,
