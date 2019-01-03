@@ -1,9 +1,12 @@
 import 'package:flutter_image_classifier/domain/bloc_utils/bloc_utils.dart';
 import 'package:flutter_image_classifier/domain/eventstates/camera_event_state.dart';
+import 'package:flutter_image_classifier/domain/managers/camera_manager.dart';
 
 class CameraBloc extends BlocEventStateBase<CameraEvent, CameraState> {
+  CameraManager _cameraManager;
 
-  CameraBloc() : super(initialState : CameraState.notInitialized());
+  CameraBloc(this._cameraManager) :
+        super(initialState: CameraState.notInitialized());
 
   @override
   Stream<CameraState> eventHandler(CameraEvent event, CameraState currentState) async* {
@@ -11,10 +14,12 @@ class CameraBloc extends BlocEventStateBase<CameraEvent, CameraState> {
       yield CameraState.notInitialized();
     }
     if (event.type == CameraEventType.start) {
-      // make network call
-    }
-    if (event.type == CameraEventType.stop) {
-      yield CameraState.initialized();
+      yield CameraState.notInitialized();
+      String result;
+      await _cameraManager.getAvailability()
+          .listen((string) { result = string; })
+          .asFuture();
+      yield CameraState.initialized(result);
     }
   }
 

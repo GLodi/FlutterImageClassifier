@@ -4,16 +4,18 @@ import 'package:flutter_image_classifier/domain/bloc_utils/bloc_event_state.dart
 
 class CameraState extends BlocState {
   final bool isInitialized;
+  final String response;
 
   CameraState({
     @required this.isInitialized,
+    this.response,
   });
 
   factory CameraState.notInitialized() =>
       CameraState(isInitialized: false);
 
-  factory CameraState.initialized() =>
-      CameraState(isInitialized: true);
+  factory CameraState.initialized(String response) =>
+      CameraState(isInitialized: true, response: response);
 }
 
 class CameraEvent extends BlocEvent {
@@ -26,5 +28,4 @@ class CameraEvent extends BlocEvent {
 
 enum CameraEventType {
   start,
-  stop,
 }
