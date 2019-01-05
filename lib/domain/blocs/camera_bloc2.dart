@@ -17,6 +17,7 @@ class CameraBloc extends BlocEventStateBase<CameraEvent, CameraState> {
       yield CameraState.notInitialized();
       String result;
       await _cameraManager.getAvailability()
+          .handleError((e) { result = e.toString(); })
           .listen((string) { result = string; })
           .asFuture();
       yield CameraState.initialized(result);

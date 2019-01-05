@@ -13,10 +13,7 @@ class ApiHelper {
   Future<String> fetchAvailability() async {
     return _net.get(url)
         .then((response) => response.toString())
-        .catchError((onError) {
-          print(onError);
-          return 'Error checking availability';
-        });
+        .catchError((e) => throw e);
   }
 
   Future<String> uploadImage(String path) async {
@@ -26,10 +23,7 @@ class ApiHelper {
     });
     return _net.post(url + '/predict', form)
         .then((response) => response.toString())
-        .catchError((onError) {
-          print(onError);
-          return 'Error uploading image';
-        });
+        .catchError((e) => throw e);
   }
 
 }

@@ -9,6 +9,7 @@ class CameraManager {
   CameraManager(this._api, this._db);
 
   Observable<String> getAvailability() =>
-      Observable.fromFuture(_api.fetchAvailability());
+      Observable.fromFuture(_api.fetchAvailability())
+          .handleError((e) => throw e );
 
 }
