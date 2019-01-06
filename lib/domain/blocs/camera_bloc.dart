@@ -24,7 +24,7 @@ class CameraBloc extends BlocBase {
   void _fetchAvailability() {
     _availabilitySubject.add(null);
     _cameraManager.getAvailability()
-        .map((string) { _availabilitySubject.add(string); })
+        .map((string) { /*_availabilitySubject.add(string); */})
         .listen((_) => {});
   }
 

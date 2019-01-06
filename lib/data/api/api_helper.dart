@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import 'package:flutter_image_classifier/data/api/net_utils.dart';
+import 'package:flutter_image_classifier/data/models/models.dart';
 
 class ApiHelper {
   final url ='http://192.168.1.9:5000';
@@ -10,9 +11,9 @@ class ApiHelper {
 
   ApiHelper(this._net);
 
-  Future<String> fetchAvailability() async {
-    return _net.get(url)
-        .then((response) => response.toString())
+  Future<Status> getStatus() async {
+    return _net.get(url + '/get_status')
+        .then((response) => Status.map(response))
         .catchError((e) => throw e);
   }
 

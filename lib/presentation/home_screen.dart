@@ -13,26 +13,35 @@ class HomeScreen extends StatelessWidget {
       body: BlocEventStateBuilder<CameraEvent, CameraState>(
         bloc: bloc,
         builder: (context, state) {
-          if (state.isInitialized) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(state.response),
-                  RaisedButton(
-                    child: Text("Open Camera"),
-                    onPressed:() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CameraApp()),
-                      );
-                    },
-                  )
-                ],
-              ),
-            );
+          switch (state.type) {
+            case CameraStateType.initialized : {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(state.message),
+                    RaisedButton(
+                      child: Text("Open Camera"),
+                      onPressed:() {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CameraApp()),
+                        );
+                      },
+                    )
+                  ],
+                ),
+              );
+            }
+            case CameraStateType.notInitialized : {
+              return Center(child: CircularProgressIndicator());
+            }
+            case CameraStateType.error : {
+              return Center(
+                child: Text(state.message),
+              );
+            }
           }
-          return Center(child: CircularProgressIndicator());
         },
       ),
       floatingActionButton: FloatingActionButton(

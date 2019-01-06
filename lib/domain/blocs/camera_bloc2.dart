@@ -10,7 +10,7 @@ class CameraBloc extends BlocEventStateBase<CameraEvent, CameraState> {
 
   @override
   Stream<CameraState> eventHandler(CameraEvent event, CameraState currentState) async* {
-    if (!currentState.isInitialized) {
+    if (!(currentState.type == CameraStateType.initialized)) {
       yield CameraState.notInitialized();
     }
     if (event.type == CameraEventType.start) {
@@ -18,7 +18,7 @@ class CameraBloc extends BlocEventStateBase<CameraEvent, CameraState> {
       String result;
       await _cameraManager.getAvailability()
           .handleError((e) { result = e.toString(); })
-          .listen((string) { result = string; })
+          .listen((status) { result = status.statusCode.toString(); })
           .asFuture();
       yield CameraState.initialized(result);
     }
