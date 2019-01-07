@@ -19,7 +19,7 @@ class CameraState extends BlocState {
           message: message);
 
   factory CameraState.error(String message) =>
-      CameraState(type: CameraStateType.notInitialized,
+      CameraState(type: CameraStateType.error,
           message: message);
 }
 
