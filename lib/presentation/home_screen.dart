@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
     _animation = CurvedAnimation(
         parent: _controller,
-        curve: new Interval(0, 1, curve: Curves.elasticInOut)
+        curve: Curves.elasticInOut,
     );
   }
 
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       floatingActionButton: SlideTransition(
           position: new Tween<Offset>(
             begin: const Offset(0, 3),
-            end: Offset.zero,
+            end: const Offset(0, -0.5),
           ).animate(_animation),
           child: FloatingActionButton(
             onPressed: () {
