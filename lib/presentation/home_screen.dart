@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  CameraBloc bloc;
   AnimationController _fabAnimCont, _cameraAnimCont;
   Animation _fabAnim, _cameraAnim;
   CameraController _cameraController;
@@ -32,9 +33,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
 
     // Camera container animation
-    _cameraAnimCont =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
-
+    _cameraAnimCont = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 2)
+    );
     _cameraAnim = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
       parent: _cameraAnimCont,
       curve: Curves.fastOutSlowIn,
@@ -47,14 +49,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       setState(() {});
     });
 
-    _cameraAnimCont.forward();
+    bloc = BlocProvider.of<CameraBloc>(context);
+    bloc.emitEvent(CameraEvent(type: CameraEventType.start));
   }
 
   @override
   Widget build(BuildContext context) {
-    CameraBloc bloc = BlocProvider.of<CameraBloc>(context);
-    bloc.emitEvent(CameraEvent(type: CameraEventType.start));
-
     return Scaffold(
       body: BlocEventStateBuilder<CameraEvent, CameraState>(
         bloc: bloc,
@@ -100,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget initializedScreen() {
+    _cameraAnimCont.forward();
     final double width = MediaQuery.of(context).size.width;
     return AnimatedBuilder(
       animation: _cameraAnimCont,
