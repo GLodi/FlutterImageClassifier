@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:camera/camera.dart';
 
@@ -8,6 +9,7 @@ import 'package:flutter_image_classifier/presentation/home_screen.dart';
 import 'package:flutter_image_classifier/presentation/camera_screen.dart';
 
 void main() async {
+  SystemChrome.setEnabledSystemUIOverlays([]);
   cameras = await availableCameras();
   final injector = Injector.getInjector();
   injector.map<NetUtils>((i) =>
@@ -28,7 +30,6 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: BlocProvider(

@@ -14,7 +14,7 @@ class CameraBloc extends BlocEventStateBase<CameraEvent, CameraState> {
       yield CameraState.notInitialized();
       CameraState result;
       await _cameraManager.getAvailability()
-          .handleError((e) { result = CameraState.error("errore"); })
+          .handleError((e) { result = CameraState.error("Connection error"); })
           .listen((status) { result = CameraState.initialized(status.statusCode.toString()); })
           .asFuture();
       yield result;
