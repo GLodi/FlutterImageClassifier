@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:camera/camera.dart';
+import 'dart:io';
+import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter_image_classifier/domain/domain.dart';
 import 'package:flutter_image_classifier/presentation/camera_screen.dart';
@@ -24,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // FAB animation
     _fabAnimCont = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 1500),
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
     );
     _fabAnim = CurvedAnimation(
       parent: _fabAnimCont,
@@ -34,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // Camera container animation
     _cameraAnimCont = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: 2)
+      vsync: this,
+      duration: Duration(seconds: 2)
     );
     _cameraAnim = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
       parent: _cameraAnimCont,
@@ -83,18 +86,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SlideTransition(
-          position: new Tween<Offset>(
-            begin: const Offset(0, 3),
-            end: const Offset(0, -0.5),
-          ).animate(_fabAnim),
-          child: FloatingActionButton(
-            onPressed: () {
-              _fabAnimCont.reverse();
-              bloc.emitEvent(CameraEvent(type: CameraEventType.start));
-            },
-            tooltip: "Refresh",
-            child: new Icon(Icons.refresh),
-          ),
+        position: new Tween<Offset>(
+          begin: const Offset(0, 3),
+          end: const Offset(0, -0.5),
+        ).animate(_fabAnim),
+        child: FloatingActionButton(
+          onPressed: () {
+            _fabAnimCont.reverse();
+            bloc.emitEvent(CameraEvent(type: CameraEventType.start));
+          },
+          tooltip: "Refresh",
+          child: new Icon(Icons.refresh),
+        ),
       ),
     );
   }
@@ -109,13 +112,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           transform: Matrix4.translationValues(_cameraAnim.value * width, 0, 0),
           child: new Container(
             child: new Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new AspectRatio(
                   aspectRatio: 3/4,
                   child: new CameraPreview(_cameraController),
                 ),
-                new RaisedButton(
-                  onPressed:null,
+                new Text(
+                  "prova",
+                  style: new TextStyle(
+                    fontFamily: "Roboto",
+                    fontSize: 20.0,
+                  ),
+                ),
+                new Align(
+                  child: RaisedButton(
+                    child: new IconButton(
+                      iconSize: 48,
+                      icon: const Icon(Icons.camera_alt),
+                    ),
+                    color: Theme.of(context).backgroundColor,
+                    onPressed: () {
+
+                    },
+                  ),
                 ),
               ],
             ),
@@ -134,6 +154,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       }
     );
   }
+
+  Future<String> takePicture() async {
+    if (!_cameraController.value.isInitialized) {
+      //showInSnackBar('Error: select a camera first.');
+      return null;
+    }
+    final Directory extDir = await getApplicationDocumentsDirectory();
+    final String dirPath = '${extDir.path}/Pictures/flutter_test';
+    await Directory(dirPath).create(recursive: true);
+    final String filePath = '$dirPath/${timestamp()}.jpg';
+
+    if (_cameraController.value.isTakingPicture) {
+      // A capture is already pending, do nothing.
+      return null;
+    }
+
+    try {
+      await _cameraController.takePicture(filePath);
+    } on CameraException catch (e) {
+      //_showCameraException(e);
+      return null;
+    }
+    return filePath;
+  }
+
+  String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
   @override
   void dispose() {
