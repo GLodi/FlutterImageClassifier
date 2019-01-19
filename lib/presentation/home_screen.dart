@@ -6,7 +6,8 @@ import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter_image_classifier/domain/domain.dart';
-import 'package:flutter_image_classifier/presentation/camera_screen.dart';
+
+List<CameraDescription> cameras;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -53,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
 
     bloc = BlocProvider.of<CameraBloc>(context);
+    bloc.setup();
     bloc.emitEvent(CameraEvent(type: CameraEventType.start));
   }
 
@@ -118,12 +120,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   aspectRatio: 3/4,
                   child: new CameraPreview(_cameraController),
                 ),
-                new Text(
-                  "prova",
-                  style: new TextStyle(
-                    fontFamily: "Roboto",
-                    fontSize: 20.0,
-                  ),
+                StreamBuilder<String> (
+                  stream: bloc.prediction,
+                  initialData: "Prediction",
+                  builder: (context, snapshot) {
+                    return Text(
+                      snapshot.data,
+                      style: new TextStyle(
+                        fontFamily: "Roboto",
+                        fontSize: 20.0,
+                      ),
+                    );
+                  },
                 ),
                 new Align(
                   child: RaisedButton(
@@ -133,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () {
-
+                      takePicture();
                     },
                   ),
                 ),
@@ -172,6 +180,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     try {
       await _cameraController.takePicture(filePath);
+      bloc.takePhoto.add(filePath);
     } on CameraException catch (e) {
       //_showCameraException(e);
       return null;

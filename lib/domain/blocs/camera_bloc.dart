@@ -1,40 +1,43 @@
 import 'package:rxdart/rxdart.dart';
-import 'dart:async';
 
 import 'package:flutter_image_classifier/domain/bloc_utils/bloc_utils.dart';
+import 'package:flutter_image_classifier/domain/eventstates/camera_event_state.dart';
 import 'package:flutter_image_classifier/domain/managers/camera_manager.dart';
 
-class CameraBloc extends BlocBase {
+class CameraBloc extends BlocEventStateBase<CameraEvent, CameraState> {
   CameraManager _cameraManager;
 
-  // out
-  final _availabilitySubject = BehaviorSubject<String>();
-  Stream<String> get availability => _availabilitySubject.stream;
+  final _predictionSubject = BehaviorSubject<String>();
+  Stream<String> get prediction => _predictionSubject.stream;
 
-  // in
-  final _fetchAvailabilitySubject = PublishSubject<int>();
-  Sink<int> get fetchAvailability => _fetchAvailabilitySubject.sink;
+  final _takePhotoSubject = PublishSubject<String>();
+  Sink<String> get takePhoto => _takePhotoSubject.sink;
 
-  CameraBloc(this._cameraManager) {
-    _fetchAvailabilitySubject.listen((_) => _fetchAvailability());
+  CameraBloc(this._cameraManager) :
+        super(initialState: CameraState.notInitialized());
 
-    fetchAvailability.add(0);
+  void setup() {
+    _takePhotoSubject.listen(_takePhoto);
   }
 
-  void _fetchAvailability() {
-    _availabilitySubject.add(null);
-    /*
-    _cameraManager.getAvailability()
-        .map((string) { /*_availabilitySubject.add(string); */})
-        .listen((_) => {});
-        */
-
+  void _takePhoto(path) {
+    _cameraManager.uploadImage(path)
+        .handleError((e) { _predictionSubject.add("error"); })
+        .listen((string) { _predictionSubject.add(string); })
+        .asFuture();
   }
 
   @override
-  void dispose() {
-    _availabilitySubject.close();
-    _fetchAvailabilitySubject.close();
+  Stream<CameraState> eventHandler(CameraEvent event, CameraState currentState) async* {
+    if (event.type == CameraEventType.start) {
+      yield CameraState.notInitialized();
+      CameraState result;
+      await _cameraManager.getStatus()
+          .handleError((e) { result = CameraState.error("Connection error"); })
+          .listen((status) { result = CameraState.initialized(status.statusCode.toString()); })
+          .asFuture();
+      yield result;
+    }
   }
 
 }

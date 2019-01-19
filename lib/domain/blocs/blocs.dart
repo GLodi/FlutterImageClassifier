@@ -1,1 +1,1 @@
-export 'camera_bloc2.dart';
+export 'camera_bloc.dart';

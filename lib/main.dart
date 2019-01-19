@@ -6,7 +6,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter_image_classifier/data/data.dart';
 import 'package:flutter_image_classifier/domain/domain.dart';
 import 'package:flutter_image_classifier/presentation/home_screen.dart';
-import 'package:flutter_image_classifier/presentation/camera_screen.dart';
 
 void main() async {
   SystemChrome.setEnabledSystemUIOverlays([]);
