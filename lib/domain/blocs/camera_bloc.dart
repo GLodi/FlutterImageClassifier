@@ -21,6 +21,7 @@ class CameraBloc extends BlocEventStateBase<CameraEvent, CameraState> {
   }
 
   void _takePhoto(path) {
+    _predictionSubject.add("uploading...");
     _cameraManager.uploadImage(path)
         .handleError((e) { _predictionSubject.add("error"); })
         .listen((string) { _predictionSubject.add(string); })

@@ -77,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: Text(
                   state.message,
                   style: new TextStyle(
+                    color: Theme.of(context).hintColor,
                     fontFamily: "Roboto",
                     fontSize: 20.0,
                   ),
@@ -127,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     return Text(
                       snapshot.data,
                       style: new TextStyle(
+                        color: Theme.of(context).hintColor,
                         fontFamily: "Roboto",
                         fontSize: 20.0,
                       ),
